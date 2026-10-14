@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROUTINE MAKER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        purple: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-purple-50/40 text-slate-800 min-h-screen flex flex-col justify-between selection:bg-purple-100 selection:text-purple-700">
+
+<!-- HEADER -->
+<header class="w-full py-6 px-8 flex justify-between items-center max-w-5xl mx-auto">
+    <h1 class="text-xl font-bold tracking-tight text-slate-900 cursor-pointer" onclick="location.href='index.html'">
+        ROUTINE <span class="text-purple-600">MAKER</span>
+    </h1>
+
+    <!-- 개발자 프로필 -->
+    <div class="flex items-center space-x-3 bg-white px-3.5 py-2 rounded-xl border border-purple-100 shadow-sm">
+        <div class="w-7 h-7 bg-purple-600 text-white rounded-lg flex items-center justify-center font-bold text-xs shadow-xs">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="2" y1="21" x2="22" y2="21"></line>
+            </svg>
+        </div>
+        <div class="text-xs">
+            <span class="font-bold text-slate-800">Jinkari</span>
+            <span class="text-slate-400 ml-1">bluurmi@gmail.com</span>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN CONTAINER -->
+<main class="flex-1 flex flex-col items-center justify-center px-4 -mt-10">
+    <div class="text-center max-w-xl space-y-8">
+        <div class="space-y-3">
+                <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                    Routine & Habit Tracker
+                </span>
+            <h2 class="text-5xl sm:text-6xl font-extrabold text-slate-900 tracking-tight">
+                ROUTINE <span class="text-purple-600">MAKER</span>
+            </h2>
+            <p class="text-slate-500 text-base sm:text-lg">
+                공부, 운동, 식단 등 일상의 모든 루틴을 간편하게 관리하세요.
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md mx-auto">
+            <button onclick="location.href='login.html'" class="w-full sm:w-1/2 py-3.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl shadow-md transition text-sm">
+                로그인
+            </button>
+            <button onclick="location.href='signup.html'" class="w-full sm:w-1/2 py-3.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold rounded-xl shadow-sm transition text-sm">
+                회원가입
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="w-full py-6 text-center text-xs text-slate-400">
+    © 2026 ROUTINE MAKER. All rights reserved.
+</footer>
+</body>
+</html>
