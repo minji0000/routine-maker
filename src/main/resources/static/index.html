@@ -46,9 +46,9 @@
 <main class="flex-1 flex flex-col items-center justify-center px-4 -mt-10">
     <div class="text-center max-w-xl space-y-8">
         <div class="space-y-3">
-                <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
-                    Routine & Habit Tracker
-                </span>
+            <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
+                Routine & Habit Tracker
+            </span>
             <h2 class="text-5xl sm:text-6xl font-extrabold text-slate-900 tracking-tight">
                 ROUTINE <span class="text-purple-600">MAKER</span>
             </h2>
@@ -58,13 +58,21 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md mx-auto">
-            <button onclick="location.href='login.html'" class="w-full sm:w-1/2 py-3.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl shadow-md transition text-sm">
-                로그인
+        <div class="flex flex-col space-y-3 w-full max-w-md mx-auto">
+            <!-- 카카오 로그인 -->
+            <button onclick="requestKakaoLogin()" class="w-full py-3.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#191919] font-bold rounded-xl shadow-md transition text-sm flex items-center justify-center space-x-2">
+                <span>카카오로 3초 만에 시작하기</span>
             </button>
-            <button onclick="location.href='signup.html'" class="w-full sm:w-1/2 py-3.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold rounded-xl shadow-sm transition text-sm">
-                회원가입
-            </button>
+
+            <!-- 일반 로그인 / 회원가입 -->
+            <div class="flex items-center justify-center gap-3 w-full">
+                <button onclick="location.href='login.html'" class="w-1/2 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold rounded-xl shadow-sm transition text-xs">
+                    일반 로그인
+                </button>
+                <button onclick="location.href='signup.html'" class="w-1/2 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold rounded-xl shadow-sm transition text-xs">
+                    이메일 회원가입
+                </button>
+            </div>
         </div>
     </div>
 </main>
@@ -73,5 +81,21 @@
 <footer class="w-full py-6 text-center text-xs text-slate-400">
     © 2026 ROUTINE MAKER. All rights reserved.
 </footer>
+
+<script>
+    function requestKakaoLogin() {
+        fetch('/api/users/kakao/login-url')
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(url) {
+                location.href = url;
+            })
+            .catch(function(error) {
+                console.error('카카오 로그인 URL 조회 실패:', error);
+                alert('로그인 요청 중 오류가 발생했습니다.');
+            });
+    }
+</script>
 </body>
 </html>

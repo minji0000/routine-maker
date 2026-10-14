@@ -51,6 +51,13 @@
             </button>
         </form>
 
+        <!-- 카카오 로그인 버튼 추가 -->
+        <div>
+            <button onclick="requestKakaoLogin()" class="w-full bg-[#FEE500] hover:bg-[#FDD835] text-[#191919] font-semibold py-3 rounded-xl shadow-sm transition text-sm flex items-center justify-center space-x-2">
+                <span>카카오로 3초 만에 시작하기</span>
+            </button>
+        </div>
+
         <div class="text-center text-xs pt-2 border-t border-slate-100">
             <a href="signup.html" class="text-slate-500 hover:text-purple-600 transition">
                 계정이 없으신가요? 회원가입
@@ -98,6 +105,15 @@
             console.error('Error:', error);
             alert('서버 통신 중 오류가 발생했습니다.');
         }
+    }
+
+    // 카카오 로그인 요청 함수 (포트 8081 반영)
+    function requestKakaoLogin() {
+        const CLIENT_ID = "5d846ff1e1edb65493f74eebd3c8b599";
+        const REDIRECT_URI = "http://localhost:8081/api/users/kakao/callback";
+        const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+        location.href = kakaoAuthUrl;
     }
 </script>
 </body>
