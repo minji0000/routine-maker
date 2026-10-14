@@ -33,7 +33,7 @@
     <div class="bg-white w-full max-w-md rounded-2xl shadow-xl border border-purple-50 p-8 space-y-6">
         <div class="text-center space-y-1">
             <h3 class="text-2xl font-bold text-slate-900">로그인</h3>
-            <p class="text-xs text-slate-500">계정 정보를 입력해주세요.</p>
+            <p class="text-xs text-slate-500">계정에 로그인하여 루틴을 관리하세요.</p>
         </div>
 
         <form onsubmit="handleLogin(event)" class="space-y-4">
@@ -51,13 +51,10 @@
             </button>
         </form>
 
-        <div class="flex justify-between items-center text-xs pt-2 border-t border-slate-100">
+        <div class="text-center text-xs pt-2 border-t border-slate-100">
             <a href="signup.html" class="text-slate-500 hover:text-purple-600 transition">
                 계정이 없으신가요? 회원가입
             </a>
-            <button type="button" onclick="alert('아이디/비밀번호 찾기 기능 준비 중')" class="text-slate-400 hover:text-slate-600 transition">
-                아이디 / 비밀번호 찾기
-            </button>
         </div>
     </div>
 </main>
@@ -68,9 +65,39 @@
 </footer>
 
 <script>
-    function handleLogin(e) {
+    async function handleLogin(e) {
         e.preventDefault();
-        alert('로그인 기능 연동 예정입니다.');
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const requestData = {
+            email: email,
+            password: password
+        };
+
+        try {
+            const response = await fetch('/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (response.ok) {
+                const userId = await response.json();
+                alert('환영합니다! 갓생 살아봅시다!');
+                // 추후 메인 대시보드나 루틴 관리 페이지로 이동 (현재는 index.html로 이동)
+                location.href = 'index.html';
+            } else {
+                const errorText = await response.text();
+                alert('로그인 실패: ' + ('이메일 또는 비밀번호를 확인해주세요.'));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('서버 통신 중 오류가 발생했습니다.');
+        }
     }
 </script>
 </body>

@@ -25,4 +25,14 @@ public class UserController {
         Long savedUserId = userService.signup(request);
         return ResponseEntity.ok(savedUserId);
     }
+
+    /**
+     * 로그인 API 엔드포인트
+     * POST /api/users/login
+     */
+    @PostMapping("/login")
+    public ResponseEntity<Long> login(@RequestBody UserRequestDto.LoginRequest request) {
+        Long userId = userService.login(request);
+        return ResponseEntity.ok(userId);
+    }
 }

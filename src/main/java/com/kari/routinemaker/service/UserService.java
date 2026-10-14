@@ -42,4 +42,21 @@ public class UserService {
         User savedUser = userRepository.save(user);
         return savedUser.getId();
     }
+
+    /**
+     * 로그인 로직
+     */
+    public Long login(UserRequestDto.LoginRequest request) {
+        // 1. 이메일 존재 여부 확인
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+
+        // 2. 비밀번호 일치 여부 확인 (평문 vs 암호화된 패스워드 비교)
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        // 3. 로그인 성공 시 유저의 PK(id) 반환 (나중에 세션이나 토큰 대용으로 활용 가능)
+        return user.getId();
+    }
 }
