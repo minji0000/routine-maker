@@ -9,71 +9,100 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: { sans: ['Pretendard Variable', 'Pretendard', 'system-ui', 'sans-serif'] },
                     colors: {
-                        purple: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9' }
+                        brand: { 50: '#f7f3ff', 100: '#ede5ff', 200: '#d9c9ff', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9', 900: '#2e1065' },
+                        blush: { 100: '#ffe4ec', 300: '#ffb3c9', 500: '#f472a0' },
+                        mint: { 100: '#d8f7ea', 500: '#1faa77' }
                     }
                 }
             }
         }
     </script>
     <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <style>
+        body { font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif; letter-spacing: -0.01em; }
+        .bg-soft {
+            background:
+                    radial-gradient(55rem 28rem at 90% -10%, rgba(255,179,201,.40), transparent 60%),
+                    radial-gradient(50rem 30rem at -10% 90%, rgba(139,92,246,.20), transparent 60%),
+                    #fbf9ff;
+        }
+        @keyframes float { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-7px) rotate(var(--r,0deg)); } }
+        .float { animation: float 6s ease-in-out infinite; }
+        .float:nth-child(2) { animation-delay: -2s; }
+        .float:nth-child(3) { animation-delay: -4s; }
+        @media (prefers-reduced-motion: reduce) { .float { animation: none; } }
+        :focus-visible { outline: 3px solid #c4b5fd; outline-offset: 3px; }
+    </style>
 </head>
-<body class="bg-purple-50/40 text-slate-800 min-h-screen flex flex-col justify-between selection:bg-purple-100 selection:text-purple-700">
+<body class="bg-soft text-slate-800 min-h-screen flex flex-col selection:bg-brand-100 selection:text-brand-700">
 
 <!-- HEADER -->
-<header class="w-full py-6 px-8 flex justify-between items-center max-w-5xl mx-auto">
-    <h1 class="text-xl font-bold tracking-tight text-slate-900 cursor-pointer" onclick="location.href='index.html'">
-        ROUTINE <span class="text-purple-600">MAKER</span>
-    </h1>
+<header class="w-full max-w-6xl mx-auto py-6 px-6 sm:px-10 flex justify-between items-center">
+    <a href="index.html" class="flex items-center gap-2.5 text-lg font-extrabold tracking-tight text-brand-900">
+        <span class="w-9 h-9 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white shadow-lg shadow-brand-200/70">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        </span>
+        Routine Maker
+    </a>
 
-    <!-- 개발자 프로필 -->
-    <div class="flex items-center space-x-3 bg-white px-3.5 py-2 rounded-xl border border-purple-100 shadow-sm">
-        <div class="w-7 h-7 bg-purple-600 text-white rounded-lg flex items-center justify-center font-bold text-xs shadow-xs">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                <line x1="2" y1="21" x2="22" y2="21"></line>
-            </svg>
-        </div>
-        <div class="text-xs">
-            <span class="font-bold text-slate-800">Jinkari</span>
-            <span class="text-slate-400 ml-1">bluurmi@gmail.com</span>
-        </div>
+    <div class="hidden sm:flex items-center gap-2.5 bg-white/80 backdrop-blur px-3.5 py-2 rounded-full border border-brand-100 shadow-sm">
+        <span class="w-7 h-7 rounded-full bg-gradient-to-br from-blush-300 to-brand-500 text-white flex items-center justify-center font-bold text-[11px]">JK</span>
+        <span class="text-xs"><b class="font-bold text-slate-800">Jinkari</b> <span class="text-slate-400 ml-0.5">Developer</span></span>
     </div>
 </header>
 
-<!-- MAIN CONTAINER -->
-<main class="flex-1 flex flex-col items-center justify-center px-4 -mt-10">
-    <div class="text-center max-w-xl space-y-8">
-        <div class="space-y-3">
-            <span class="inline-block px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full">
-                Routine & Habit Tracker
-            </span>
-            <h2 class="text-5xl sm:text-6xl font-extrabold text-slate-900 tracking-tight">
-                ROUTINE <span class="text-purple-600">MAKER</span>
-            </h2>
-            <p class="text-slate-500 text-base sm:text-lg">
-                공부, 운동, 식단 등 일상의 모든 루틴을 간편하게 관리하세요.
+<!-- HERO -->
+<main class="flex-1 flex items-center justify-center px-4 pb-10">
+    <div class="relative w-full max-w-xl">
+        <!-- soft glow behind card -->
+        <div class="absolute -inset-5 rounded-[3rem] bg-gradient-to-br from-brand-200/60 via-blush-100/70 to-transparent blur-2xl" aria-hidden="true"></div>
+
+        <section class="relative bg-white/85 backdrop-blur-xl rounded-[2rem] border border-white shadow-2xl shadow-brand-200/50 px-7 py-10 sm:px-12 sm:py-14 text-center">
+
+            <p class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-100 text-brand-700 text-[13px] font-semibold">
+                <span class="w-2 h-2 rounded-full bg-blush-500"></span>
+                Habit &amp; Routine Tracker
             </p>
-        </div>
 
-        <!-- Action Buttons -->
-        <div class="flex flex-col space-y-3 w-full max-w-md mx-auto">
-            <!-- 카카오 로그인 -->
-            <button onclick="requestKakaoLogin()" class="w-full py-3.5 bg-[#FEE500] hover:bg-[#FDD835] text-[#191919] font-bold rounded-xl shadow-md transition text-sm flex items-center justify-center space-x-2">
-                <span>카카오로 3초 만에 시작하기</span>
-            </button>
+            <h2 class="mt-6 text-4xl sm:text-[2.9rem] font-extrabold text-brand-900 leading-[1.2] tracking-tight">
+                작은 루틴이 모여<br>하루가 달라져요
+            </h2>
+            <p class="mt-5 text-slate-500 text-base leading-relaxed">
+                공부, 운동, 식단 등 일상의 모든 루틴을<br class="hidden sm:block"> 간편하고 체계적으로 관리하세요.
+            </p>
 
-            <!-- 일반 로그인 / 회원가입 -->
-            <div class="flex items-center justify-center gap-3 w-full">
-                <button onclick="location.href='login.html'" class="w-1/2 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold rounded-xl shadow-sm transition text-xs">
-                    일반 로그인
+            <!-- Categories -->
+            <ul class="mt-7 flex flex-wrap justify-center gap-2.5" aria-label="관리할 수 있는 루틴">
+                <li class="float px-4 py-2 rounded-full bg-brand-100 text-brand-700 text-sm font-semibold" style="--r:-3deg">공부</li>
+                <li class="float px-4 py-2 rounded-full bg-mint-100 text-mint-500 text-sm font-semibold" style="--r:2deg">운동</li>
+                <li class="float px-4 py-2 rounded-full bg-blush-100 text-blush-500 text-sm font-semibold" style="--r:-2deg">식단</li>
+            </ul>
+
+            <!-- Actions -->
+            <div class="mt-10 flex flex-col gap-3 w-full">
+                <button type="button" onclick="requestKakaoLogin()"
+                        class="w-full py-4 bg-[#FEE500] hover:bg-[#fadb00] active:scale-[0.99] text-[#191919] font-bold rounded-2xl shadow-lg shadow-yellow-200/60 transition flex items-center justify-center gap-2.5 text-[15px]">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 3C6.48 3 2 6.58 2 11c0 2.84 1.87 5.32 4.67 6.74-.15.55-.55 2.01-.63 2.32-.1.38.14.37.3.25.12-.09 1.95-1.33 2.74-1.87.62.09 1.26.14 1.92.14 5.52 0 10-3.58 10-8s-4.48-8-10-8z"/>
+                    </svg>
+                    카카오로 3초 만에 시작하기
                 </button>
-                <button onclick="location.href='signup.html'" class="w-1/2 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold rounded-xl shadow-sm transition text-xs">
-                    이메일 회원가입
-                </button>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" onclick="location.href='login.html'"
+                            class="py-3.5 bg-brand-600 hover:bg-brand-700 active:scale-[0.99] text-white font-semibold rounded-2xl shadow-lg shadow-brand-200/70 transition text-sm">
+                        로그인
+                    </button>
+                    <button type="button" onclick="location.href='signup.html'"
+                            class="py-3.5 bg-white hover:bg-brand-50 active:scale-[0.99] text-brand-700 border border-brand-200 font-semibold rounded-2xl transition text-sm">
+                        이메일로 가입
+                    </button>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
 </main>
 
