@@ -118,8 +118,8 @@
             if (response.ok) {
                 const userId = await response.json();
                 alert('환영합니다! 갓생 살아봅시다!');
-                // 추후 메인 대시보드나 루틴 관리 페이지로 이동 (현재는 index.html로 이동)
-                location.href = 'index.html';
+                // 대시보드 페이지로 이동
+                location.href = 'dashboard.html';
             } else {
                 const errorText = await response.text();
                 alert('로그인 실패: ' + ('이메일 또는 비밀번호를 확인해주세요.'));
