@@ -2,6 +2,8 @@ package com.kari.routinemaker.controller;
 
 import com.kari.routinemaker.dto.UserRequestDto;
 import com.kari.routinemaker.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,20 @@ public class UserController {
     public ResponseEntity<Long> login(@RequestBody UserRequestDto.LoginRequest request) {
         Long userId = userService.login(request);
         return ResponseEntity.ok(userId);
+    }
+
+    /**
+     * 로그아웃 API 엔드포인트
+     * POST /api/users/logout
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        // 세션이 존재하면 무효화
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return ResponseEntity.ok().build();
     }
 
     /**
