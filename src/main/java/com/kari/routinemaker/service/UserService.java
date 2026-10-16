@@ -120,12 +120,6 @@ public class UserService {
 
     private String getKakaoAccessToken(String code) {
 
-        System.out.println("=== KAKAO ACCESS TOKEN REQUEST ===");
-        System.out.println("clientId = " + kakaoClientId);
-        System.out.println("redirectUri = " + kakaoRedirectUri);
-        System.out.println("code = " + code);
-        System.out.println("kakaoClientSecret = " + kakaoClientSecret);
-
         RestTemplate rt = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
