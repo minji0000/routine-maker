@@ -155,24 +155,14 @@
 </footer>
 
 <script>
-    // ───── 샘플 데이터 (API 연동 시 이 부분을 fetch 결과로 교체) ─────
-    var user = { nickname: '루틴러' };
     var COLORS = { purple: '#8b5cf6', mint: '#34c38f', rose: '#f472a0', amber: '#f5a524', sky: '#4aa8ec', slate: '#94a3b8' };
     var COLOR_KEYS = Object.keys(COLORS);
-    var categories = [
-        { id: 1, name: '공부', color: 'purple' },
-        { id: 2, name: '운동', color: 'mint' },
-        { id: 3, name: '식단', color: 'rose' }
-    ];
-    var nextCatId = 4;
-    var routines = [
-        { id: 1, name: '운동',         catId: 2, ago: [1, 2, 3, 5, 6, 8, 9, 12] },
-        { id: 2, name: '식단 관리',    catId: 3, ago: [1, 2, 3, 4, 5, 6, 7, 8, 10] },
-        { id: 3, name: '영어 단어',    catId: 1, ago: [1, 2, 4, 5, 8, 9, 10] },
-        { id: 4, name: '전공 책 읽기', catId: 1, ago: [2, 3, 6, 9] }
-    ];
-    var checks = {};          // { 'routineId|YYYY-MM-DD': true }  → DB의 날짜별 체크 기록 테이블
-    var nextId = 5, weekOffset = 0, editingId = null;
+
+    // API 연동을 위해 빈 배열로 초기화
+    var categories = [];
+    var routines = [];
+    var checks = {};          // { 'routineId|YYYY-MM-DD': true }
+    var weekOffset = 0, editingId = null;
 
     var DAYS = ['월', '화', '수', '목', '금', '토', '일'];
     var CHECK = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
@@ -190,11 +180,7 @@
         for (var i = 0; i < categories.length; i++) if (categories[i].id !== exceptId && categories[i].name.toLowerCase() === n) return categories[i];
         return null;
     }
-    function createCategory(name) {
-        var c = { id: nextCatId++, name: name, color: COLOR_KEYS[categories.length % 5] };
-        categories.push(c);
-        return c;
-    }
+
     function setMsg(t) { $('catMsg').textContent = t || ''; }
 
     function refreshCatSelect(selected) {
@@ -222,19 +208,27 @@
                 '</div><div class="mt-2.5 flex gap-2.5">' + sw + '</div></li>';
         }).join('');
     }
+
     function afterCatChange() { renderCatList(); render(); }
 
     function openCatDialog() { setMsg(''); renderCatList(); $('catDialog').showModal(); $('catNewName').focus(); }
+
     function addCategory(e) {
         e.preventDefault();
         var name = $('catNewName').value.trim();
         if (!name) { setMsg('이름을 입력해 주세요.'); return; }
         if (findCatByName(name, null)) { setMsg("이미 '" + name + "' 카테고리가 있어요."); return; }
-        createCategory(name);
+
+        // TODO: 백엔드 카테고리 생성 API 호출 자리
+        // fetch('/api/categories', { method: 'POST', ... }) 등으로 연동
+        var c = { id: Date.now(), name: name, color: COLOR_KEYS[categories.length % 5] };
+        categories.push(c);
+
         $('catNewName').value = ''; setMsg('');
         afterCatChange();
         $('catNewName').focus();
     }
+
     $('catList').addEventListener('change', function (e) {
         var id = e.target.getAttribute('data-cat-name');
         if (!id) return;
@@ -242,8 +236,10 @@
         if (!name) { setMsg('이름은 비워둘 수 없어요.'); e.target.value = c.name; return; }
         if (findCatByName(name, c.id)) { setMsg("이미 '" + name + "' 카테고리가 있어요."); e.target.value = c.name; return; }
         c.name = name; setMsg('');
+        // TODO: 백엔드 카테고리 수정 API 연동
         render();
     });
+
     $('catList').addEventListener('click', function (e) {
         var col = e.target.closest('[data-cat-color]');
         if (col) { var p = col.getAttribute('data-cat-color').split('|'); catOf(Number(p[0])).color = p[1]; afterCatChange(); return; }
@@ -254,9 +250,11 @@
             if (n && !confirm("'" + c.name + "' 카테고리를 삭제할까요?\n이 카테고리의 루틴 " + n + "개는 '미분류'로 이동해요.")) return;
             routines.forEach(function (r) { if (r.catId === c.id) r.catId = null; });
             categories = categories.filter(function (x) { return x.id !== c.id; });
+            // TODO: 백엔드 카테고리 삭제 API 연동
             setMsg(''); afterCatChange();
         }
     });
+
     $('catDialog').addEventListener('click', function (e) { if (e.target === this) this.close(); });
     $('routineDialog').addEventListener('click', function (e) { if (e.target === this) this.close(); });
     $('rCat').addEventListener('change', function () {
@@ -279,6 +277,7 @@
         $('routineDialog').showModal();
         $('rName').focus();
     }
+
     function saveRoutine(e) {
         e.preventDefault();
         var name = $('rName').value.trim();
@@ -287,19 +286,26 @@
         if (sel === '__new') {
             var cn = $('rCatName').value.trim();
             if (!cn) { $('rCatName').focus(); return; }
-            catId = (findCatByName(cn, null) || createCategory(cn)).id;
+            var newCat = findCatByName(cn, null) || { id: Date.now(), name: cn, color: COLOR_KEYS[categories.length % 5] };
+            if (!findCatByName(cn, null)) categories.push(newCat);
+            catId = newCat.id;
         } else if (sel !== '') { catId = Number(sel); }
+
         if (editingId !== null) {
+            // TODO: 백엔드 루틴 수정 API 연동
             routines.forEach(function (r) { if (r.id === editingId) { r.name = name; r.catId = catId; } });
         } else {
-            routines.push({ id: nextId++, name: name, catId: catId, ago: [] });
+            // TODO: 백엔드 루틴 생성 API 연동
+            routines.push({ id: Date.now(), name: name, catId: catId });
         }
         $('routineDialog').close();
         render();
     }
+
     function deleteRoutine() {
         if (editingId === null || !confirm('이 루틴을 삭제할까요?\n체크 기록도 함께 삭제돼요.')) return;
         var id = editingId;
+        // TODO: 백엔드 루틴 삭제 API 연동
         routines = routines.filter(function (r) { return r.id !== id; });
         Object.keys(checks).forEach(function (k) { if (k.indexOf(id + '|') === 0) delete checks[k]; });
         $('routineDialog').close();
@@ -311,17 +317,15 @@
         var d = addDays(today, offset * 7);
         return addDays(d, -((d.getDay() + 6) % 7));       // 월요일
     }
+
     function isDone(rid, k) { return !!checks[rid + '|' + k]; }
+
     function weekCount(r, ws) {
         var n = 0;
         for (var i = 0; i < 7; i++) if (isDone(r.id, key(addDays(ws, i)))) n++;
         return n;
     }
-    routines.forEach(function (r) {            // 샘플 기록 생성
-        r.ago.forEach(function (n) { checks[r.id + '|' + key(addDays(today, -n))] = true; });
-    });
 
-    // 루틴별 연속 기록: 오늘 체크 전이면 어제부터 이어서 센다
     function streakOf(r) {
         var n = 0, d = today;
         if (!isDone(r.id, key(d))) d = addDays(d, -1);
@@ -386,8 +390,17 @@
     $('gridBody').addEventListener('click', function (e) {
         var cell = e.target.closest('[data-r]');
         if (cell && !cell.disabled) {
-            var k = cell.getAttribute('data-r') + '|' + cell.getAttribute('data-d');
-            if (checks[k]) delete checks[k]; else checks[k] = true;
+            var rid = cell.getAttribute('data-r');
+            var d = cell.getAttribute('data-d');
+            var k = rid + '|' + d;
+
+            if (checks[k]) {
+                delete checks[k];
+                // TODO: 백엔드 체크 해제 API 연동
+            } else {
+                checks[k] = true;
+                // TODO: 백엔드 체크 등록 API 연동
+            }
             render();
             return;
         }
@@ -395,7 +408,7 @@
         if (ed) openRoutineDialog(Number(ed.getAttribute('data-edit')));
     });
 
-    // 로그아웃 (기존 임시 대시보드 로직 유지)
+    // 로그아웃
     function logout() {
         fetch('/api/users/logout', {
             method: 'POST'
@@ -412,9 +425,15 @@
         });
     }
 
+    // TODO: 페이지 로드 시 백엔드에서 사용자 정보 및 루틴 데이터(categories, routines, checks)를 가져오는 fetch 함수를 여기에 추가하세요.
+    function loadInitialData() {
+        // 예시:
+        // fetch('/api/dashboard').then(res => res.json()).then(data => { ... render(); });
+    }
+
     (function init() {
-        $('nick').textContent = user.nickname;
         $('today').textContent = now.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'long' });
+        loadInitialData();
         render();
     })();
 </script>
