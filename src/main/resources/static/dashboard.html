@@ -436,6 +436,57 @@
         loadInitialData();
         render();
     })();
+
+    // 백엔드에서 카테고리 목록을 불러오는 함수
+    function loadInitialData() {
+        fetch('/api/categories')
+            .then(function(response) {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('카테고리를 불러오지 못했습니다.');
+            })
+            .then(function(data) {
+                categories = data; // 서버에서 가져온 카테고리 배열 대입
+                afterCatChange();
+            })
+            .catch(function(error) {
+                console.error('데이터 로드 오류:', error);
+            });
+    }
+
+    function addCategory(e) {
+        e.preventDefault();
+        var name = $('catNewName').value.trim();
+        if (!name) { setMsg('이름을 입력해 주세요.'); return; }
+        if (findCatByName(name, null)) { setMsg("이미 '" + name + "' 카테고리가 있어요."); return; }
+
+        // 백엔드 API로 카테고리 생성 요청
+        fetch('/api/categories', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: name, color: COLOR_KEYS[categories.length % 5] })
+        })
+            .then(function(response) {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('카테고리 저장 실패');
+            })
+            .then(function(savedCategory) {
+                categories.push(savedCategory); // 서버가 반환한 저장된 카테고리(id 포함) 추가
+                $('catNewName').value = '';
+                setMsg('');
+                afterCatChange();
+                $('catNewName').focus();
+            })
+            .catch(function(error) {
+                console.error('카테고리 추가 오류:', error);
+                setMsg('카테고리 저장 중 오류가 발생했습니다.');
+            });
+    }
 </script>
 </body>
 </html>

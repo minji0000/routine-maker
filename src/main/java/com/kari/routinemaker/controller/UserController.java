@@ -32,8 +32,9 @@ public class UserController {
      * POST /api/users/login
      */
     @PostMapping("/login")
-    public ResponseEntity<Long> login(@RequestBody UserRequestDto.LoginRequest request) {
+    public ResponseEntity<Long> login(@RequestBody UserRequestDto.LoginRequest request, HttpSession session) {
         Long userId = userService.login(request);
+        session.setAttribute("userId", userId);
         return ResponseEntity.ok(userId);
     }
 
@@ -64,9 +65,11 @@ public class UserController {
      * 2. 카카오 로그인 완료 후 인가 코드(code)를 받아 처리하는 콜백 API
      */
     @GetMapping("/kakao/callback")
-    public ResponseEntity<Void> kakaoCallback(@RequestParam("code") String code) {
+    public ResponseEntity<Void> kakaoCallback(@RequestParam("code") String code, HttpSession session) {
         // 서비스의 카카오 로그인 로직 호출 (토큰 발급 및 유저 정보 조회·저장)
         Long userId = userService.kakaoLogin(code);
+
+        session.setAttribute("userId", userId);
 
         // 2. 로그인이 완료되면 메인 페이지(index.html)로 리다이렉트
         return ResponseEntity.status(HttpStatus.FOUND)

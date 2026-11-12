@@ -32,6 +32,9 @@ public class CategoryController {
     // 카테고리 생성 API
     @PostMapping
     public ResponseEntity<Category> createCategory(@RequestBody Map<String, String> request, HttpSession session) {
+
+        System.out.println("=== 세션 확인용 userId: " + session.getAttribute("userId"));
+
         Long userId = (Long) session.getAttribute("userId");
         if (userId == null) {
             return ResponseEntity.status(401).build();
